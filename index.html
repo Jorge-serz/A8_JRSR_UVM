@@ -1,0 +1,341 @@
+<!-- Indica el tipo de documento HTML5-->
+<!doctype html>
+<!-- Se especifica el idioma del contenido -->
+<html lang="es">
+<head>
+  <!-- Configuracion basica de caracteres-->
+  <meta charset="utf-8">
+  <!-- Titulo que aparece en la pestana del navegador -->
+  <title>Activida 8 - JRSR - CONEVAL 2008 - 2018</title>
+  <!-- Adaptacion a pantallas moviles (responsive design)-->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Libreria de Google Charts para generar graficos -->
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  
+  <!-- =================== ESTILOS CSS =================== -->
+  <style>
+    /* Variables de color y estilos generales */
+    :root {
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --accent: #2b7a78;
+      --muted: #666666;
+      --shadow: 0 6px 18px rgba(15,20,30,0.06);
+      --radius: 10px;
+    }
+
+    /* Estilos base de la página */
+    body { 
+      margin:0; 
+      font-family: Inter, Roboto, Arial, sans-serif; 
+      background:var(--bg); 
+      color:#222; 
+    }
+
+    /* Encabezado superior (título principal) */
+    header { 
+      background: linear-gradient(180deg, #8a2e2e 0%, #df1b1b 100%); 
+      color:white; 
+      padding:28px 18px; 
+      text-align:center; 
+    }
+
+    /* Título principal del header */
+    header h1 { 
+      margin:0; 
+      font-size:1.6rem; 
+      letter-spacing:0.2px; 
+    }
+
+    /* Subtítulo o texto debajo del título */
+    header p { 
+      margin:6px 0 0; 
+      opacity:.85; 
+      font-size:0.95rem; 
+    }
+
+    /* Contenedor principal del contenido */
+    main { 
+      max-width:1200px; 
+      margin:20px auto; 
+      padding: 0 18px 60px; 
+    }
+
+    /* Configuración del sistema de cuadrícula (grid) */
+    .grid { 
+      display:grid; 
+      grid-template-columns: 1fr 1fr; 
+      gap:18px; 
+    }
+
+    /* Tarjetas o bloques visuales donde van las tablas y gráficos */
+    .card { 
+      background:var(--card); 
+      padding:14px; 
+      border-radius:var(--radius); 
+      box-shadow:var(--shadow); 
+    }
+
+    /* Clase para ocupar todo el ancho en la cuadrícula */
+    .full { grid-column: 1 / -1; }
+
+    /* Estilos de subtítulos y textos */
+    h2 { margin:0 0 8px; font-size:1.05rem; color:var(--accent); }
+    p.small { margin:6px 0; color:var(--muted); font-size:0.95rem; }
+
+    /* Estilos de las tablas de datos */
+    table { 
+      width:100%; 
+      border-collapse:collapse; 
+      margin-top:10px; 
+      font-size:0.95rem; 
+    }
+    table thead th { 
+      text-align:left; 
+      background:#f3f6f9; 
+      padding:8px 10px; 
+      border-bottom:1px solid #e6eef6; 
+    }
+    table tbody td { 
+      padding:8px 10px; 
+      border-bottom:1px solid #f0f4f8; 
+    }
+
+    /* Estilos para los textos explicativos */
+    .explain { font-size:0.92rem; color:#333; margin-top:8px; }
+
+    /* Estilo de las listas en la sección de recursos */
+    .resources ul { padding-left:18px; margin:6px 0 0; color:var(--muted); }
+
+    /* Pie de página */
+    footer { text-align:center; color:#666; font-size:0.9rem; margin-top:20px; }
+
+    /* Altura estándar de los gráficos */
+    .chart { height:320px; }
+
+    /* Adaptación del diseño a pantallas pequeñas */
+    @media (max-width:900px) {
+      .grid { grid-template-columns: 1fr; }
+      .chart { height:260px; }
+    }
+
+    /* Estilo de texto pequeño y numeradores de secciones */
+    .meta { font-size:0.88rem; color:var(--muted); margin-bottom:8px; }
+    .section-number { 
+      display:inline-block; 
+      background:#eef6f6; 
+      color:var(--accent); 
+      padding:6px 10px; 
+      border-radius:20px; 
+      font-weight:600; 
+      margin-right:8px; 
+      font-size:0.9rem;
+    }
+  </style>
+
+<!-- =================== SCRIPT JAVASCRIPT =================== -->
+<script>
+  // Cargar los paquetes necesarios de Google Charts
+  google.charts.load('current', {'packages':['corechart','bar','controls','table']});
+  // Cuando se cargue la librería, ejecutar la función drawAll()
+  google.charts.setOnLoadCallback(drawAll);
+
+  // --- Conjuntos de datos (extraídos del comunicado CONEVAL 2019) ---
+  // 1) Porcentaje de población en pobreza
+  const datosPobrezaPct = [
+    ['Año','% población en pobreza'],
+    ['2008', 44.4],
+    ['2018', 41.9]
+  ];
+
+  // 2) Número de personas en pobreza y pobreza extrema (millones)
+  const datosPersonasMill = [
+    ['Situación','2008','2018'],
+    ['Pobreza (millones)', 49.5, 52.4],
+    ['Pobreza extrema (millones)', 12.3, 9.3]
+  ];
+
+  // 3) Carencias sociales (porcentaje de la población afectada)
+  const datosCarencias = [
+    ['Carencia','2008','2018'],
+    ['Rezago educativo', 21.9, 16.9],
+    ['Servicios de salud', 38.4, 16.2],
+    ['Seguridad social', 65.0, 57.3],
+    ['Calidad y espacios vivienda', 17.7, 11.1],
+    ['Servicios básicos vivienda', 22.9, 19.8],
+    ['Acceso a la alimentación', 21.7, 20.4]
+  ];
+
+  // 4) Composición general de la pobreza (2018)
+  const datosComposicion2018 = [
+    ['Estado','Porcentaje'],
+    ['En pobreza (2018)', 41.9],
+    ['No en pobreza (2018)', 58.1]
+  ];
+
+  // 5) Promedio de carencias por tipo de población
+  const datosPromCarencias = [
+    ['Grupo','2008','2018'],
+    ['Promedio carencias - Población en pobreza', 2.8, 2.2],
+    ['Promedio carencias - Población en pobreza extrema', 3.9, 3.6]
+  ];
+
+  // --- Función principal que dibuja todos los gráficos ---
+  function drawAll() {
+    // ======= GRÁFICO 1: Línea =======
+    const data1 = google.visualization.arrayToDataTable(datosPobrezaPct); // Convierte los datos en formato de tabla
+    const opts1 = {
+      title: '% de población en situación de pobreza (2008 vs 2018)',
+      curveType: 'function', // Dibuja la línea suavizada
+      legend: {position:'none'},
+      vAxis: { viewWindowMode: 'explicit', viewWindow: { min: 0 } },
+      height: 300
+    };
+    const chart1 = new google.visualization.LineChart(document.getElementById('chart1'));
+    chart1.draw(data1, opts1);
+
+    // ======= GRÁFICO 2: Columnas =======
+    const data2 = google.visualization.arrayToDataTable(datosPersonasMill);
+    const opts2 = {
+      title: 'Número de personas en pobreza y pobreza extrema (millones)',
+      height: 320,
+      vAxis: {format: 'decimal'}
+    };
+    const chart2 = new google.visualization.ColumnChart(document.getElementById('chart2'));
+    chart2.draw(data2, opts2);
+
+    // ======= GRÁFICO 3: Barras horizontales =======
+    const data3 = google.visualization.arrayToDataTable(datosCarencias);
+    const opts3 = {
+      title: 'Carencias sociales (%) 2008 vs 2018',
+      bars: 'horizontal', // Barras horizontales
+      height: 360,
+      bar: { groupWidth: "62%" },
+      hAxis: { viewWindow: { min: 0 } }
+    };
+    const chart3 = new google.visualization.BarChart(document.getElementById('chart3'));
+    chart3.draw(data3, opts3);
+
+    // ======= GRÁFICO 4: Pastel =======
+    const data4 = google.visualization.arrayToDataTable(datosComposicion2018);
+    const opts4 = {
+      title: 'Composición: Población en pobreza vs no pobreza (2018)',
+      height: 300
+    };
+    const chart4 = new google.visualization.PieChart(document.getElementById('chart4'));
+    chart4.draw(data4, opts4);
+
+    // ======= GRÁFICO 5: Columnas (promedio de carencias) =======
+    const data5 = google.visualization.arrayToDataTable(datosPromCarencias);
+    const opts5 = {
+      title: 'Promedio de carencias (2008 vs 2018) — Pobreza / Pobreza extrema',
+      height: 320,
+      vAxis: { minValue: 0, maxValue: 4.5 },
+      seriesType: 'bars'
+    };
+    const chart5 = new google.visualization.ColumnChart(document.getElementById('chart5'));
+    chart5.draw(data5, opts5);
+
+    // ======= CREAR TABLAS HTML CON LOS DATOS =======
+    renderTableFromArray('table1', datosPobrezaPct);
+    renderTableFromArray('table2', datosPersonasMill);
+    renderTableFromArray('table3', datosCarencias);
+    renderTableFromArray('table4', datosComposicion2018);
+    renderTableFromArray('table5', datosPromCarencias);
+
+    // Redibujar los gráficos automáticamente si el usuario cambia el tamaño de la ventana
+    window.addEventListener('resize', function(){ 
+      chart1.draw(data1, opts1);
+      chart2.draw(data2, opts2);
+      chart3.draw(data3, opts3);
+      chart4.draw(data4, opts4);
+      chart5.draw(data5, opts5);
+    });
+  }
+
+  // --- Función auxiliar para crear tablas HTML dinámicamente ---
+  function renderTableFromArray(elementId, array2d) {
+    const container = document.getElementById(elementId);
+    if(!container) return;
+
+    // Construye la estructura HTML de la tabla
+    let html = '<table><thead><tr>';
+    const headerRow = array2d[0]; // Primera fila son los encabezados
+    for(let h=0; h<headerRow.length; h++){
+      html += `<th>${escapeHtml(headerRow[h])}</th>`;
+    }
+    html += '</tr></thead><tbody>';
+
+    // Agrega las filas de datos
+    for(let r=1; r<array2d.length; r++){
+      html += '<tr>';
+      for(let c=0; c<array2d[r].length; c++){
+        html += `<td>${escapeHtml(String(array2d[r][c]))}</td>`;
+      }
+      html += '</tr>';
+    }
+    html += '</tbody></table>';
+
+    // Inserta la tabla en el contenedor HTML
+    container.innerHTML = html;
+  }
+
+  // --- Función de seguridad para evitar errores con caracteres especiales ---
+  function escapeHtml(s){
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+</script>
+  </head>
+
+<body>
+  <!-- Encabezado principal del documento -->
+  <header>
+    <h1>A8_JRSR - Pobreza en México (CONEVAL 2008 - 2018)</h1>
+    <p>Fuente: CONEVAL (2019). <em>10 años de medición de pobreza en México, avances y retos en política social</em> — Comunicado, 5 de agosto de 2019.</p>
+  </header>
+  
+  <!--Contenido principal-->
+  <main>
+    <!--Seccion 1: tablas con los datos base-->
+    <section class="card full">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span class="section-number">1</span>
+        <h2>Preparación de la información</h2>
+      </div>
+      <p class="meta">Se presentan los conjuntos de datos extraídos y preparados a partir del Comunicado CONEVAL (2008 vs 2018).</p>
+      
+      <div class="grid" style="margin-top:12px;">
+        <!-- Contenedores de las tablas -->
+         <div class="card"><h3>Dataset A — % población en pobreza</h3><div id="table1"></div></div>
+         <div class="card"><h3>Dataset B — Número de personas (millones)</h3><div id="table2"></div></div>
+         <div class="card"><h3>Dataset C — Carencias sociales (%)</h3><div id="table3"></div></div>
+         <div class="card"><h3>Dataset D — Composición pobreza 2018</h3><div id="table4"></div></div>
+         <div class="card full"><h3>Dataset E — Promedio de carencias</h3><div id="table5"></div></div>
+      </div>
+    </section>
+
+    <!-- Sección 2-4: tablero de visualizaciones -->
+     <section class="card full" style="margin-top:16px;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span class="section-number">2-4</span>
+        <h2>Tablero: Visualización gráfica con Google Charts</h2>
+      </div>
+      <p class="meta">Gráficos que muestran las comparaciones y proporciones principales de los datos del CONEVAL.</p>
+
+      <div class="grid" style="margin-top: 12px;">
+        <!-- Cada div con id "chartX" es un contenedor donde se dibuja un gráfico -->
+        <div class="card"><h3>Gráfico 1 — % población en pobreza</h3><div id="chart1" class="chart"></div></div>
+        <div class="card"><h3>Gráfico 2 — Personas en pobreza (millones)</h3><div id="chart2" class="chart"></div></div>
+        <div class="card full"><h3>Gráfico 3 — Carencias sociales (%)</h3><div id="chart3" class="chart"></div></div>
+        <div class="card"><h3>Gráfico 4 — Pobreza vs No pobreza (2018)</h3><div id="chart4" class="chart"></div></div>
+        <div class="card"><h3>Gráfico 5 — Promedio de carencias</h3><div id="chart5" class="chart"></div></div>
+      </div>
+     </section>
+
+     <!-- Pie de página con créditos -->
+      <footer>
+        <p>Datos extraídos del Comunicado CONEVAL (2019).</p>
+      </footer>
+  </main>
+</body>
+</html>
